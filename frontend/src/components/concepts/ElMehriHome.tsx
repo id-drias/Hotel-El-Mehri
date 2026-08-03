@@ -16,6 +16,7 @@ import {
   WordReveal,
 } from '@/components/motion';
 import { starsLabel } from '@/config';
+import { formatRate } from '@/lib/utils/format';
 import { contact, hotel, img, telHref } from '@/content/hotel';
 import { rooms } from '@/content/rooms';
 import { services } from '@/content/services';
@@ -79,7 +80,7 @@ const UI = {
   callUs: { fr: 'Nous appeler', ar: 'اتصلوا بنا' },
   upTo: { fr: "Jusqu'à", ar: 'حتى' },
   adults: { fr: 'personnes', ar: 'أشخاص' },
-  onRequest: { fr: 'Tarif sur demande', ar: 'السعر عند الطلب' },
+  perNight: { fr: '/ nuit', ar: '/ ليلة' },
   seeRoom: { fr: 'Voir la chambre', ar: 'عرض الغرفة' },
 } as const;
 
@@ -281,7 +282,8 @@ export function ElMehriHome({ locale, reviews = [] }: { locale: Locale; reviews?
                     />
                     <span aria-hidden="true" className="lyn-img-veil" />
                     <span className="lyn-room-badge">
-                      {room.surfaceM2} m² · {t(UI.upTo, locale)} {room.maxAdults}
+                      {room.surfaceM2 ? `${room.surfaceM2} m² · ` : ''}
+                      {t(UI.upTo, locale)} {room.maxAdults}
                     </span>
                   </div>
 
@@ -305,7 +307,10 @@ export function ElMehriHome({ locale, reviews = [] }: { locale: Locale; reviews?
 
                     <div className="mt-auto flex items-center justify-between gap-3 border-t border-ink-800/10 pt-5">
                       <span className="text-[0.6875rem] tracking-[0.2em] text-ink-500 uppercase">
-                        {t(UI.onRequest, locale)}
+                        {formatRate(room.fromRate, locale)}
+                        <span className="ms-1 normal-case tracking-normal text-ink-400">
+                          {t(UI.perNight, locale)}
+                        </span>
                       </span>
                       <Link href={`/rooms/${room.slug}`} className="lyn-link lyn-focus">
                         {t(UI.seeRoom, locale)}

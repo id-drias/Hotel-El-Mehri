@@ -23,12 +23,7 @@ export const services: ServiceContent[] = [
       fr: 'Refait à neuf lors de la réhabilitation, le restaurant gastronomique accueille soixante convives autour des spécialités locales et nationales, du petit déjeuner au dîner.',
       ar: 'أُعيد تجهيزه بالكامل خلال أشغال إعادة التأهيل، يستقبل المطعم الراقي ستين ضيفاً حول الأطباق المحلية والوطنية، من الفطور إلى العشاء.',
     },
-    images: [
-      '/images/dining/restaurant-1.jpg',
-      '/images/dining/restaurant-2.jpg',
-      '/images/dining/restaurant-3.jpg',
-      '/images/dining/restaurant-4.jpg',
-    ],
+    images: ['/images/dining/restaurant-1.jpg', '/images/dining/restaurant-2.jpg'],
   },
   {
     slug: 'cafeteria',
@@ -36,10 +31,16 @@ export const services: ServiceContent[] = [
     name: { fr: 'La Cafétéria', ar: 'الكافيتيريا' },
     kicker: { fr: 'Salon de thé — 40 places', ar: 'صالون شاي — 40 مقعداً' },
     description: {
-      fr: 'Quarante places pour les boissons chaudes et fraîches, les jus et les pâtisseries, à toute heure de la journée.',
-      ar: 'أربعون مقعداً للمشروبات الساخنة والباردة والعصائر والحلويات، في أي وقت من اليوم.',
+      fr: "Quarante places sous les voûtes blanches de Pouillon : boissons chaudes et fraîches, jus, thé et pâtisseries, à toute heure de la journée.",
+      ar: 'أربعون مقعداً تحت أقبية بويون البيضاء: مشروبات ساخنة وباردة وعصائر وشاي وحلويات، في أي وقت من اليوم.',
     },
-    images: ['/images/dining/cafeteria-1.jpg', '/images/dining/cafeteria-2.jpg'],
+    images: [
+      '/images/dining/cafeteria-1.jpg',
+      '/images/dining/cafeteria-2.jpg',
+      '/images/dining/cafeteria-3.jpg',
+      '/images/dining/cafeteria-4.jpg',
+      '/images/dining/cafeteria-5.jpg',
+    ],
   },
   {
     slug: 'kheima',
@@ -58,16 +59,10 @@ export const services: ServiceContent[] = [
     name: { fr: 'Piscine et sauna', ar: 'المسبح والساونا' },
     kicker: { fr: 'Loisirs et bien-être', ar: 'الترفيه والاستجمام' },
     description: {
-      fr: "Une piscine extérieure entièrement rénovée, bordée par le jardin de l'hôtel, et un sauna installé lors des travaux de réhabilitation.",
-      ar: 'مسبح خارجي مجدَّد بالكامل تحيط به حديقة الفندق، وساونا رُكِّبت خلال أشغال إعادة التأهيل.',
+      fr: "Une piscine extérieure entièrement rénovée, bordée de palmiers et gratuite pour les résidents, et un sauna installé lors des travaux de réhabilitation.",
+      ar: 'مسبح خارجي مجدَّد بالكامل تحيط به النخيل ومجاني للنزلاء، وساونا رُكِّبت خلال أشغال إعادة التأهيل.',
     },
-    images: [
-      '/images/wellness/piscine-1.jpg',
-      '/images/wellness/piscine-2.jpg',
-      '/images/wellness/piscine-3.jpg',
-      '/images/wellness/sauna-1.jpg',
-      '/images/wellness/sauna-2.jpg',
-    ],
+    images: ['/images/wellness/piscine-1.jpg', '/images/wellness/sauna-1.jpg'],
   },
   {
     slug: 'seminaires',
@@ -81,7 +76,6 @@ export const services: ServiceContent[] = [
     images: [
       '/images/events/salle-conference-1.jpg',
       '/images/events/salle-conference-2.jpg',
-      '/images/events/salle-conference-3.jpg',
     ],
   },
 ];

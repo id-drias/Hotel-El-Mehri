@@ -39,7 +39,8 @@ export function RoomCard({ room, priority = false }: { room: RoomContent; priori
           <div className="absolute inset-x-0 bottom-0 p-7">
             <h3 className="font-display text-2xl text-white">{room.name[locale]}</h3>
             <p className="mt-2 text-[0.6875rem] tracking-[0.18em] text-sand-300/80 uppercase">
-              {room.surfaceM2} m² &middot; {room.maxAdults} {t('common.guests')}
+              {room.surfaceM2 ? `${room.surfaceM2} m² · ` : ''}
+              {room.maxAdults} {t('common.guests')}
             </p>
             <span className="mt-5 inline-block text-[0.6875rem] tracking-[0.22em] text-gold-300 uppercase opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-within:opacity-100">
               {t('rooms.view')}

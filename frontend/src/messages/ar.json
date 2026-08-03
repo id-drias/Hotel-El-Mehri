@@ -23,6 +23,7 @@
     "priceOnRequest": "السعر عند الطلب",
     "guests": "أشخاص",
     "surface": "المساحة",
+    "fromPerNight": "ابتداءً من / ليلة",
     "backToRooms": "العودة إلى الإقامة",
     "backToBlog": "العودة إلى الفعاليات"
   },

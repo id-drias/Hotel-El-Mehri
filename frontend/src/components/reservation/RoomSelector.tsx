@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useLocale } from 'next-intl';
 
 import { img } from '@/content/hotel';
+import { formatRate } from '@/lib/utils/format';
 import { rooms } from '@/content/rooms';
 import type { Locale } from '@/lib/i18n/config';
 import { cn } from '@/lib/utils/cn';
@@ -43,7 +44,7 @@ export function RoomSelector({ selected, onChange }: Props) {
             <div className="min-w-0 flex-1">
               <p className="truncate font-display text-lg text-ink-900">{room.name[locale]}</p>
               <p className="text-[0.625rem] uppercase tracking-[0.18em] text-ink-400">
-                {room.surfaceM2} m&sup2;
+                {formatRate(room.fromRate, locale)}
               </p>
             </div>
 

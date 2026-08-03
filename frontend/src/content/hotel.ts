@@ -20,18 +20,22 @@ const PLACEHOLDER_ORIGIN = 'https://placehold.co';
 const PLACEHOLDER_SIZE = '1600x1067';
 const PLACEHOLDER_COLOURS = '2b2118/d8c9a6';
 
+/** Paths with no photograph yet. Lookup rather than scan — this runs per <Image>. */
+const PENDING = new Set<string>(hotelConfig.media.pendingPhotos);
+
 /**
  * Photography lives in /public/images. Every `<Image>` on the site resolves its
  * `src` through here, which makes this the one place that decides where a photo
  * comes from — the public folder, a placeholder, or the Django media host later.
  *
- * While `media.usePlaceholders` is true the real paths are still what the
- * content files declare; only the resolved URL changes. Drop the official
- * photography at those paths (docs/image-manifest.md lists all 24) and flip the
- * flag — no content edits needed.
+ * Most slots now hold the hotel's real photography. The handful still listed in
+ * `media.pendingPhotos` fall back to a palette-matched placeholder, so a missing
+ * photo degrades to an obvious gap instead of a broken image, and no slot ever
+ * shows a different property. Drop a file at one of those paths and remove its
+ * entry from the list — see docs/image-manifest.md.
  */
 export function img(path: string): string {
-  if (hotelConfig.media.usePlaceholders) {
+  if (PENDING.has(path)) {
     const label = path
       .split('/')
       .pop()!

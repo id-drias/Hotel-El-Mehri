@@ -17,9 +17,12 @@ Sections: home, presentation, rooms, services, gallery, events, contact — plus
 > Its `_needsConfirmation` array lists every value that is **not** verified — read it
 > before launch.
 >
-> Photography is not final. `media.usePlaceholders` is `true`, which routes every image
-> through `placehold.co`; see [`docs/image-manifest.md`](docs/image-manifest.md) for the
-> 24 files to supply and where each one lands.
+> Photography is the hotel's own, taken from its Facebook page and Google Maps listing:
+> 16 slots are filled, 10 are still pending and render a labelled placeholder until a
+> file is dropped at the path. See [`docs/image-manifest.md`](docs/image-manifest.md).
+>
+> Rates are real — transcribed from the hotel's 2026 tariff posters and displayed on the
+> room cards. The full board matrix lives in `rates.board`.
 
 ---
 

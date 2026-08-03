@@ -12,6 +12,7 @@ import { Container } from '@/components/ui/Container';
 import { getRoom, rooms } from '@/content/rooms';
 import { isLocale, locales, type Locale } from '@/lib/i18n/config';
 import { Link } from '@/lib/i18n/navigation';
+import { formatRate } from '@/lib/utils/format';
 
 export function generateStaticParams() {
   return locales.flatMap((locale) => rooms.map((room) => ({ locale, slug: room.slug })));
@@ -73,10 +74,20 @@ export default async function RoomDetailPage({
               <p className="mt-8 leading-relaxed text-ink-500">{room.description[l]}</p>
 
               <div className="mt-8 flex gap-10 border-y border-ink-800/10 py-6">
+                {room.surfaceM2 ? (
+                  <div>
+                    <p className="font-display text-3xl text-gold-600">{room.surfaceM2} m&sup2;</p>
+                    <p className="mt-1 text-[0.625rem] uppercase tracking-[0.18em] text-ink-400">
+                      {tc('surface')}
+                    </p>
+                  </div>
+                ) : null}
                 <div>
-                  <p className="font-display text-3xl text-gold-600">{room.surfaceM2} m&sup2;</p>
+                  <p className="font-display text-3xl text-gold-600">
+                    {formatRate(room.fromRate, l)}
+                  </p>
                   <p className="mt-1 text-[0.625rem] uppercase tracking-[0.18em] text-ink-400">
-                    {tc('surface')}
+                    {tc('fromPerNight')}
                   </p>
                 </div>
                 <div>
