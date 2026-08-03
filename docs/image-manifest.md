@@ -23,7 +23,7 @@ No content edits, no component edits, no rebuild config.
 
 | Path | What it is | Source |
 | --- | --- | --- |
-| `banners/hero.jpg` | Pool with the domed arcade behind | Google Maps |
+| `banners/hero.jpg` | Elevated pool panorama, date palms, evening light | Google Maps |
 | `banners/about.jpg` | Facade with the `HOTEL EL MEHRI / فندق المهري` signage | Google Maps |
 | `hotel/hotel-1.jpg` | White vaulted corridor, chequerboard floor | Google Maps |
 | `hotel/hotel-2.jpg` | Reception desk under the vault | Facebook |
@@ -36,7 +36,7 @@ No content edits, no component edits, no rebuild config.
 | `dining/cafeteria-3.jpg` | Salon with the pierced chandelier | Facebook |
 | `dining/cafeteria-4.jpg` | Coffee cup and flowers, close | Facebook |
 | `dining/cafeteria-5.jpg` | Teapot and red curtains | Facebook |
-| `wellness/piscine-1.jpg` | Pool panorama with the palms | Google Maps |
+| `wellness/piscine-1.jpg` | Pool with the domed arcade behind | Google Maps |
 | `blog/rehabilitation.jpg` | Facade (reuse of `banners/about.jpg`) | Google Maps |
 | `blog/patrimoine.jpg` | Vaulted corridor (reuse of `hotel/hotel-1.jpg`) | Google Maps |
 
@@ -73,7 +73,9 @@ hotel, which is the weakest pairing on the site.
 
 ## Processing
 
-Every file: downloaded at maximum available resolution, resized to an 1800 px long
+The hero is cropped 16:9 from a 6000x2693 master (Google serves `lh3.googleusercontent.com` images at any requested size — ask for `=w6000-h6000-k-no`), then resized to 2400x1350. It has to survive both a desktop landscape viewport and a mobile portrait one, since `.lyn-hero` is `min-height: 100svh` full-bleed; the pool and the palm cluster stay in frame in both.
+
+Every other file: downloaded at maximum available resolution, resized to an 1800 px long
 edge, saved as progressive JPEG at quality 82. **26 files, 5.5 MB total.** Aspect
 ratios are mixed — the Facebook uploads are square, several Maps shots portrait —
 and every component uses `fill` + `object-cover`, so they crop cleanly without
