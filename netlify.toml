@@ -11,6 +11,16 @@
 [build.environment]
   NODE_VERSION = "22"
 
+  # Opens /admin. Without it the route 404s — see the gate in
+  # frontend/src/app/admin/layout.tsx, which exists so an accidental deploy
+  # never exposes the console. Enabling it here rather than in the Netlify UI
+  # keeps the decision in version control where it can be reviewed and reverted.
+  #
+  # Not a secret and not a substitute for authentication: the console renders
+  # only a sign-in form until the API returns a staff token, and every endpoint
+  # refuses unauthenticated requests regardless of what the browser renders.
+  ADMIN_CONSOLE_ENABLED = "true"
+
 # App Router SSR, next-intl middleware, ISR and next/image all run through the
 # Next.js runtime. Without it the deploy is a static shell that 404s on
 # /fr, /ar and every dynamic route.
