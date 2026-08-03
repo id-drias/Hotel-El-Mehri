@@ -1,6 +1,9 @@
 import type { MetadataRoute } from 'next';
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+import { site } from '@/lib/constants/site';
+
+/* Same single source as the sitemap - see the note there. */
+const BASE = site.url;
 
 export default function robots(): MetadataRoute.Robots {
   return {

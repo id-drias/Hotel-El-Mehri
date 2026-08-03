@@ -2,9 +2,13 @@ import type { MetadataRoute } from 'next';
 
 import { articles } from '@/content/articles';
 import { rooms } from '@/content/rooms';
+import { site } from '@/lib/constants/site';
 import { locales } from '@/lib/i18n/config';
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+/* `site.url` is NEXT_PUBLIC_SITE_URL when set, otherwise seo.siteUrl from
+   hotel.config.json. Hardcoding a localhost fallback here shipped
+   http://localhost:3000 into the production sitemap. */
+const BASE = site.url;
 
 const staticPaths = ['', '/about', '/rooms', '/services', '/gallery', '/blog', '/contact', '/reservation'];
 
