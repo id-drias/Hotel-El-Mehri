@@ -166,8 +166,9 @@
   ],
 
   "media": {
-    "_photos": "Real photography from the hotel's Facebook page and its Google Maps listing. Paths listed in pendingPhotos have no photo yet and render a placeholder until a file is dropped at that path — see docs/image-manifest.md.",
-    "pendingPhotos": [
+    "_photos": "Two kinds of image are in frontend/public/images. Everything not listed in stockPhotos is the hotel's own, from its Facebook page or its Google Maps listing. Paths in stockPhotos are Unsplash stand-ins showing OTHER properties — placed so no slot renders empty, and to be replaced as soon as the hotel supplies its own. See docs/image-manifest.md for the source of every file.",
+    "pendingPhotos": [],
+    "stockPhotos": [
       "/images/rooms/suite-junior-1.jpg",
       "/images/rooms/suite-junior-2.jpg",
       "/images/rooms/suite-senior-1.jpg",
@@ -216,6 +217,7 @@
     "instagram, mobile and fax are blank: no account or number found. The UI omits them automatically.",
     "tourVideoUrl is blank: the Facebook page has a 22s clip but it is not on YouTube. Upload it and paste the URL to switch the video section on.",
     "seo.siteUrl / apiMediaHost / defaultFromEmail use placeholder domains - point them at the real ones before launch.",
-    "Photo rights: images come from the hotel's own Facebook page and its Google Maps listing. Maps entries can be visitor-contributed - hotel/hotel-1.jpg and blog/rehabilitation.jpg had a phone-camera watermark cropped off. Confirm the hotel owns or has cleared everything before the site goes public."
+    "Photo rights: images come from the hotel's own Facebook page and its Google Maps listing. Maps entries can be visitor-contributed - hotel/hotel-1.jpg and blog/rehabilitation.jpg had a phone-camera watermark cropped off. Confirm the hotel owns or has cleared everything before the site goes public.",
+    "STOCK IMAGERY: the 10 paths in media.stockPhotos are Unsplash photographs of OTHER hotels, standing in for rooms and spaces nobody has photographed yet. The Unsplash licence permits commercial use, but the images do not show this property - a guest booking a Suite Senior at 12 420 DA is looking at someone else's room. Replace them before the site takes real bookings, or add a visible 'photo non contractuelle' note. They are deliberately excluded from the gallery, which shows only genuine photography."
   ]
 }

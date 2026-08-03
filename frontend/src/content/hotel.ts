@@ -20,7 +20,12 @@ const PLACEHOLDER_ORIGIN = 'https://placehold.co';
 const PLACEHOLDER_SIZE = '1600x1067';
 const PLACEHOLDER_COLOURS = '2b2118/d8c9a6';
 
-/** Paths with no photograph yet. Lookup rather than scan — this runs per <Image>. */
+/**
+ * Paths with no image file at all. Empty today — every slot is filled, ten of
+ * them by the Unsplash stand-ins in `media.stockPhotos`. Kept because it is the
+ * mechanism that lets a new slot be declared in content before its photograph
+ * exists. Lookup rather than scan: this runs once per `<Image>`.
+ */
 const PENDING = new Set<string>(hotelConfig.media.pendingPhotos);
 
 /**

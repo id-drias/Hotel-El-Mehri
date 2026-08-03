@@ -17,9 +17,10 @@ Sections: home, presentation, rooms, services, gallery, events, contact — plus
 > Its `_needsConfirmation` array lists every value that is **not** verified — read it
 > before launch.
 >
-> Photography is the hotel's own, taken from its Facebook page and Google Maps listing:
-> 16 slots are filled, 10 are still pending and render a labelled placeholder until a
-> file is dropped at the path. See [`docs/image-manifest.md`](docs/image-manifest.md).
+> Photography: all 26 slots are filled. 16 are the hotel's own, from its Facebook page
+> and Google Maps listing. **10 are Unsplash stand-ins showing other properties** —
+> listed in `media.stockPhotos` and to be replaced before the site takes real bookings.
+> See [`docs/image-manifest.md`](docs/image-manifest.md) for the source of every file.
 >
 > Rates are real — transcribed from the hotel's 2026 tariff posters and displayed on the
 > room cards. The full board matrix lives in `rates.board`.
