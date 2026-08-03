@@ -1,0 +1,156 @@
+{
+  "_readme": [
+    "SINGLE SOURCE OF TRUTH for the whole property. Both stacks read this file:",
+    "  frontend -> frontend/src/config/index.ts  (typed re-export, imported by src/content/* and the layout chrome)",
+    "  backend  -> backend/config/hotel_config.py (json.load, imported by settings/base.py and apps/contact/services.py)",
+    "Change a value here and it propagates to every page, email, meta tag and admin screen.",
+    "Anything under _needsConfirmation is NOT verified - confirm with the hotel before going live."
+  ],
+
+  "brand": {
+    "name": "Hôtel El Mehri",
+    "shortName": "El Mehri",
+    "nameAr": "فندق المهري",
+    "slug": "hotel-el-mehri",
+    "stars": 3,
+    "chain": {
+      "fr": "Chaîne El Aurassi",
+      "ar": "سلسلة الأوراسي"
+    },
+    "wordmark": {
+      "primary": "EL MEHRI",
+      "secondary": "OUARGLA"
+    }
+  },
+
+  "tagline": {
+    "fr": "Votre havre de paix au cœur d'Ouargla",
+    "ar": "واحة سكينتكم في قلب ورقلة"
+  },
+
+  "intro": {
+    "fr": "Signé Fernand Pouillon et classé au patrimoine national, l'hôtel El Mehri se dresse au centre-ville d'Ouargla, à quelques pas du siège de la wilaya.",
+    "ar": "من تصميم فرنان بويون ومصنَّف ضمن التراث الوطني، ينتصب فندق المهري في وسط مدينة ورقلة على بعد خطوات من مقر الولاية."
+  },
+
+  "about": {
+    "fr": "Bienvenue à l'hôtel El Mehri, votre havre de paix alliant confort moderne et service d'exception. Œuvre du célèbre architecte Fernand Pouillon et classé au patrimoine national, l'établissement appartient à la chaîne El Aurassi et occupe le centre-ville d'Ouargla. Entièrement réhabilité, il conjugue une architecture saharienne pensée pour le climat et des prestations remises à neuf.",
+    "ar": "مرحباً بكم في فندق المهري، واحة سكينتكم التي تجمع بين الراحة العصرية والخدمة الاستثنائية. من إنجاز المهندس الشهير فرنان بويون ومصنَّف ضمن التراث الوطني، ينتمي الفندق إلى سلسلة الأوراسي ويحتل وسط مدينة ورقلة. وبعد إعادة تأهيل شاملة، يجمع بين عمارة صحراوية مصمَّمة للمناخ وخدمات مجدَّدة بالكامل."
+  },
+
+  "aboutRooms": {
+    "fr": "81 chambres et suites pour 180 lits, dont 78 chambres doubles, rénovées dans un décor sobre et lumineux et dotées du wifi, de la climatisation et d'une salle de bain privative.",
+    "ar": "81 غرفة وجناحاً بسعة 180 سريراً، منها 78 غرفة مزدوجة، مجدَّدة بديكور هادئ ومضيء ومجهزة بالواي فاي والتكييف وحمام خاص."
+  },
+
+  "aboutDining": {
+    "fr": "Un restaurant gastronomique de 60 couverts servant les spécialités locales et nationales, une cafétéria de 40 places, et une kheima traditionnelle dressée au jardin pour les soirées sahariennes.",
+    "ar": "مطعم راقٍ بسعة 60 مقعداً يقدّم الأطباق المحلية والوطنية، وكافيتيريا بـ40 مقعداً، وخيمة تقليدية منصوبة في الحديقة لسهرات صحراوية."
+  },
+
+  "aboutEvents": {
+    "fr": "Deux salles de conférence de 60 places chacune, adaptées aux séminaires, formations et réunions professionnelles.",
+    "ar": "قاعتا مؤتمرات بسعة 60 مقعداً لكل واحدة، مهيأتان للندوات والتكوين والاجتماعات المهنية."
+  },
+
+  "aboutWellness": {
+    "fr": "Une piscine extérieure entièrement rénovée, un sauna et un jardin arboré. L'hôtel dispose également d'un parking et d'une connexion wifi dans l'ensemble des espaces.",
+    "ar": "مسبح خارجي مجدَّد بالكامل وساونا وحديقة مشجَّرة. كما يتوفر الفندق على موقف سيارات واتصال واي فاي في كل الفضاءات."
+  },
+
+  "address": {
+    "street": "Rue Chetti El Ouakal",
+    "city": "Ouargla",
+    "postalCode": "30000",
+    "wilaya": "Ouargla",
+    "country": { "fr": "Algérie", "ar": "الجزائر" }
+  },
+
+  "coordinates": { "lat": 31.9565257, "lng": 5.3370919 },
+
+  "googleMapsUrl": "https://maps.app.goo.gl/wCKqxn5gUQ3RMKhR9",
+
+  "proximity": [
+    { "fr": "Siège de la wilaya — 1 minute", "ar": "مقر الولاية — دقيقة واحدة" },
+    { "fr": "Ksar de Ouargla — 1,6 km", "ar": "قصر ورقلة — 1.6 كلم" },
+    { "fr": "Tramway — 5 minutes", "ar": "الترامواي — 5 دقائق" },
+    { "fr": "Aéroport Aïn El Beïda — 15 minutes", "ar": "مطار عين البيضاء — 15 دقيقة" }
+  ],
+
+  "contact": {
+    "email": "hotelelmehri@yahoo.com",
+    "phones": ["029 76 10 56", "029 70 20 68"],
+    "mobile": "",
+    "fax": "029 76 20 68",
+    "facebook": "https://www.facebook.com/profile.php?id=61591283286297",
+    "instagram": "",
+    "openingHours": { "fr": "Ouvert 24h/24", "ar": "مفتوح 24/24" }
+  },
+
+  "rates": {
+    "currency": "DZD",
+    "currencyLabel": { "fr": "DA", "ar": "دج" },
+    "showPrices": false,
+    "publishedFromRate": 1700,
+    "_note": "showPrices=false reproduces the reference site's behaviour: the UI renders 'Tarif sur demande'. publishedFromRate is the figure carried by Algerian directories and is almost certainly pre-renovation. Set per-room rates in content/rooms.ts and flip showPrices once the hotel confirms its 2026 grid."
+  },
+
+  "capacity": {
+    "totalRooms": 81,
+    "totalBeds": 180,
+    "doubleRooms": 78,
+    "suites": 3,
+    "restaurantSeats": 60,
+    "cafeteriaSeats": 40,
+    "conferenceRooms": 2,
+    "conferenceSeatsEach": 60
+  },
+
+  "stats": [
+    { "value": "81", "label": { "fr": "Chambres et suites", "ar": "غرفة وجناحاً" } },
+    { "value": "180", "label": { "fr": "Lits", "ar": "سريراً" } },
+    { "value": "1968", "label": { "fr": "Signé Fernand Pouillon", "ar": "من تصميم فرنان بويون" } },
+    { "value": "3", "label": { "fr": "Étoiles", "ar": "نجوم" } }
+  ],
+
+  "media": {
+    "usePlaceholders": true,
+    "_usePlaceholders": "true routes every image through placehold.co (see img() in frontend/src/content/hotel.ts) so no page ships the previous property's photography. Drop the real files at the paths listed in docs/image-manifest.md and set this to false.",
+    "heroBanner": "/images/banners/hero.jpg",
+    "aboutBanner": "/images/banners/about.jpg",
+    "aboutImages": [
+      "/images/hotel/hotel-1.jpg",
+      "/images/hotel/hotel-2.jpg",
+      "/images/hotel/hotel-3.jpg"
+    ],
+    "tourVideoUrl": ""
+  },
+
+  "seo": {
+    "locales": ["fr", "ar"],
+    "defaultLocale": "fr",
+    "siteUrl": "https://hotel-el-mehri.netlify.app",
+    "apiMediaHost": "api.hotelelmehri.dz"
+  },
+
+  "infrastructure": {
+    "databaseName": "elmehri",
+    "databaseUser": "elmehri",
+    "refreshCookieName": "elmehri_refresh",
+    "emailSubjectPrefix": "El Mehri",
+    "defaultFromEmail": "no-reply@hotelelmehri.dz",
+    "staffNotificationEmail": "hotelelmehri@yahoo.com",
+    "apiTitle": "Hôtel El Mehri API",
+    "apiDescription": "Public content and enquiry API for the Hôtel El Mehri site."
+  },
+
+  "_needsConfirmation": [
+    "Phone numbers: 029 76 10 56 and 029 70 20 68 come from Algerian business directories. The hotel's own Facebook page lists 020 83 59 35, which is an Algiers (020) prefix - probably the El Aurassi head office. Confirm which number should be primary.",
+    "Room counts: post-rehabilitation sources give 81 rooms / 180 beds / 78 doubles. An older source says 31 rooms including 7 suites. The suite count of 3 here is derived (81 - 78), not published.",
+    "Rates: no current public price grid exists. 1700 DA is a directory figure and is not used in the UI.",
+    "Build year 1968 for the Pouillon build is approximate - Pouillon's Saharan hotel programme ran 1965-1975. Confirm or remove the stat.",
+    "instagram and mobile are blank: no account was found. Fill in or the UI will omit them.",
+    "tourVideoUrl is blank: the Facebook page has a 22s video but it is not on YouTube. Upload it and paste the URL.",
+    "seo.siteUrl / apiMediaHost / defaultFromEmail use placeholder domains - point them at the real ones before launch."
+  ]
+}

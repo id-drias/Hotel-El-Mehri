@@ -1,0 +1,26 @@
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+
+# Also ignored by frontend/.gitignore and backend/.gitignore. Repeated here
+# because tools that zip the repo (Netlify's zip-and-build among them) read the
+# root .gitignore only, and shipping 850 MB of dependencies fails the upload.
+node_modules/
+.next/
+.venv/
+
+# graphify knowledge-graph output — regenerate with `graphify .`
+graphify-out/
+
+# Full-resolution originals exported for print/design use. The web-sized
+# copies the site actually renders live in frontend/public/images/.
+mainpagephotos/
+
+# MCP server config. `claude mcp add --header` and the 21st.dev CLI both write
+# the API key into this file in plaintext, and this repository is public.
+.mcp.json
+
+# Netlify CLI state (site id link, local build cache).
+.netlify/

@@ -1,0 +1,1260 @@
+/**
+ * Motion system.
+ *
+ * Everything Framer Motion does not own: the infinite ambient loops, the
+ * hover/focus decoration, and the surface treatments the primitives in
+ * `src/components/motion` attach themselves to.
+ *
+ * This used to be a template literal injected through `dangerouslySetInnerHTML`
+ * on the homepage, which re-shipped the whole sheet inside the HTML on every
+ * request and never went through the minifier. It is a real stylesheet now.
+ *
+ * The reduced-motion block at the bottom is the contract for the whole file:
+ * every looping animation declared above it must be switched off there.
+ */
+
+/* Animatable angle for the liquid glow. Unsupported engines simply hold the
+   initial value, so the border still paints — it just doesn't travel. */
+@property --lyn-spin {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* On :root, not on `.lyn`. The system started life scoped to the homepage
+   wrapper, but every page uses it now — and a `.lyn-*` class whose `var(--lyn-ease)`
+   resolved to nothing outside that wrapper would silently fall back to the
+   default `ease` curve, which is exactly the linear-ish motion this design is
+   trying to avoid. `.lyn` is kept as a no-op hook for page-level scoping. */
+:root {
+  --lyn-ease: var(--ease-luxe, cubic-bezier(0.22, 1, 0.36, 1));
+  --lyn-slow: 1100ms;
+}
+
+/* ---- Reading progress --------------------------------------------------- */
+
+/* Sits under the mobile menu (z-60) and over the header (z-50). */
+.lyn-progress {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 55;
+  display: block;
+  height: 2px;
+  transform-origin: left center;
+  background: linear-gradient(
+    90deg,
+    var(--color-gold-600),
+    var(--color-gold-400) 55%,
+    var(--color-gold-300)
+  );
+  pointer-events: none;
+}
+
+[dir='rtl'] .lyn-progress {
+  transform-origin: right center;
+}
+
+/* ---- Header chrome ------------------------------------------------------ */
+
+/* The gold hairline that draws in under a nav link. Scale rather than width,
+   so it animates on the compositor instead of triggering layout. */
+.lyn-nav-link::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: -0.5rem;
+  height: 1px;
+  background-color: var(--color-gold-500);
+  transform: scaleX(0);
+  /* `transform-origin` takes no logical keywords, so RTL needs its own rule
+     below rather than an `inline-start` that would silently do nothing. */
+  transform-origin: left center;
+  transition: transform 560ms var(--ease-luxe);
+}
+
+[dir='rtl'] .lyn-nav-link::after {
+  transform-origin: right center;
+}
+
+.lyn-nav-link:hover::after,
+.lyn-nav-link:focus-visible::after,
+.lyn-nav-link[aria-current='page']::after {
+  transform: scaleX(1);
+}
+
+/* Footer links lean toward the reader on approach. `transform` rather than
+   padding or margin, so the nudge never reflows the column beside it. */
+.lyn-foot-link {
+  display: inline-block;
+  width: fit-content;
+  transition:
+    color 500ms var(--ease-luxe),
+    transform 500ms var(--ease-luxe);
+}
+
+.lyn-foot-link:hover,
+.lyn-foot-link:focus-visible {
+  transform: translateX(4px);
+}
+
+[dir='rtl'] .lyn-foot-link:hover,
+[dir='rtl'] .lyn-foot-link:focus-visible {
+  transform: translateX(-4px);
+}
+
+/* ---- Entrance on load (hero only) --------------------------------------- */
+
+.lyn-enter,
+.lyn-enter-2,
+.lyn-enter-3,
+.lyn-enter-4 {
+  animation: lyn-rise 1.3s var(--lyn-ease) both;
+}
+.lyn-enter-2 {
+  animation-delay: 180ms;
+}
+.lyn-enter-3 {
+  animation-delay: 320ms;
+}
+.lyn-enter-4 {
+  animation-delay: 480ms;
+}
+
+@keyframes lyn-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 26px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---- Word-by-word headline ---------------------------------------------- */
+
+/* The mask. `overflow: hidden` alone would shear the descenders off a display
+   serif, so the box is padded and the padding pulled straight back out. The
+   inline-end margin stands in for the space between words, which cannot
+   survive inside a clipped inline-block. */
+.lyn-word {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+  margin-inline-end: 0.26em;
+  vertical-align: bottom;
+}
+
+.lyn-word-in {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ---- Hero --------------------------------------------------------------- */
+
+.lyn-hero {
+  position: relative;
+  display: flex;
+  min-height: 100svh;
+  align-items: center;
+  overflow: hidden;
+}
+
+.lyn-hero-media {
+  position: absolute;
+  inset: 0;
+}
+
+/* A full-bleed photographic layer behind a scrim. Overscanned top and bottom so
+   the parallax drift can never pull an edge into view. */
+.lyn-media-layer {
+  position: absolute;
+  inset: -8% 0;
+}
+
+/* The moving half of <Parallax>. It fills its measured wrapper so a `fill`
+   image inside still has a positioned box to resolve against. */
+.lyn-parallax-inner {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.lyn-hero-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to top,
+      rgba(11, 10, 8, 0.92),
+      rgba(11, 10, 8, 0.25) 55%,
+      rgba(11, 10, 8, 0.55)
+    ),
+    rgba(11, 10, 8, 0.3);
+}
+
+.lyn-hero-inner {
+  position: relative;
+  z-index: 10;
+  margin-inline: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding: 9rem 1.5rem 4rem;
+}
+
+/* The scroll cue: a gold filament with a bead running down it. */
+.lyn-scroll-cue {
+  position: absolute;
+  inset-block-end: 2.5rem;
+  inset-inline-start: 50%;
+  z-index: 10;
+  transform: translateX(-50%);
+}
+
+.lyn-scroll-rail {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 4rem;
+  overflow: hidden;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(189, 154, 92, 0.45) 30%,
+    rgba(189, 154, 92, 0.45) 70%,
+    transparent
+  );
+}
+
+.lyn-scroll-bead {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, var(--color-gold-300), transparent);
+  animation: lyn-bead 2.8s var(--lyn-ease) infinite;
+}
+
+@keyframes lyn-bead {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(250%);
+    opacity: 0;
+  }
+}
+
+/* ---- Ambient light ------------------------------------------------------ */
+
+/* Two pools breathing on offset cycles (16s / 21s) so the rhythm never
+   resolves into an obvious loop. Driven by <AmbientField>. */
+.lyn-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: block;
+}
+
+.lyn-ambient > span {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.lyn-ambient-a {
+  background: radial-gradient(38rem 30rem at 22% 18%, rgba(189, 154, 92, 0.24), transparent 66%);
+  animation: lyn-breathe-a 16s ease-in-out infinite;
+}
+
+.lyn-ambient-b {
+  background: radial-gradient(44rem 34rem at 80% 78%, rgba(224, 203, 156, 0.18), transparent 68%);
+  animation: lyn-breathe-b 21s ease-in-out infinite;
+}
+
+.lyn-ambient-warm {
+  mix-blend-mode: screen;
+}
+
+/* The light-surface variant: the same breathing pools, dialled down so they
+   read as warmth on sand rather than as a coloured haze. */
+.lyn-ambient-soft .lyn-ambient-a {
+  background: radial-gradient(40rem 32rem at 12% 10%, rgba(189, 154, 92, 0.11), transparent 68%);
+}
+
+.lyn-ambient-soft .lyn-ambient-b {
+  background: radial-gradient(46rem 36rem at 88% 90%, rgba(220, 207, 184, 0.24), transparent 70%);
+}
+
+@keyframes lyn-breathe-a {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.12);
+  }
+}
+
+@keyframes lyn-breathe-b {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: scale(1.08);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+}
+
+/* ---- Floating imagery --------------------------------------------------- */
+
+.lyn-float {
+  animation: lyn-float 13s ease-in-out infinite;
+}
+
+.lyn-float-slow {
+  animation: lyn-float 19s ease-in-out infinite reverse;
+}
+
+@keyframes lyn-float {
+  0%,
+  100% {
+    transform: translate3d(0, -8px, 0);
+  }
+  50% {
+    transform: translate3d(0, 8px, 0);
+  }
+}
+
+/* ---- Curtain reveal ----------------------------------------------------- */
+
+.lyn-curtain {
+  position: relative;
+  overflow: hidden;
+}
+
+.lyn-curtain-media {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+.lyn-curtain-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: block;
+  transform-origin: top center;
+  background: linear-gradient(to bottom, var(--color-gold-500), var(--color-ink-900));
+  pointer-events: none;
+}
+
+/* ---- Booking bar -------------------------------------------------------- */
+
+.lyn-book {
+  position: relative;
+  margin-top: 3.5rem;
+  border-radius: 2px;
+  padding: 0.5rem;
+  overflow: hidden;
+  background: rgba(251, 248, 243, 0.1);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.85);
+}
+
+/* Idle glass shimmer: a wide, very faint highlight drifting across the panel.
+   Kept at 0.05 alpha and a 9s cycle — at anything brighter or faster it stops
+   reading as light on glass and starts reading as a loading skeleton. */
+.lyn-book::before {
+  content: '';
+  position: absolute;
+  inset: -50% -30%;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 58%
+  );
+  animation: lyn-shimmer 9s var(--lyn-ease) infinite;
+}
+
+@keyframes lyn-shimmer {
+  0% {
+    transform: translateX(-60%);
+  }
+  60%,
+  100% {
+    transform: translateX(60%);
+  }
+}
+
+.lyn-book-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.14);
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .lyn-book-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lyn-book-grid {
+    grid-template-columns: repeat(4, 1fr) auto;
+  }
+}
+
+.lyn-field {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.9375rem 1.25rem;
+  cursor: pointer;
+  background: rgba(11, 10, 8, 0.55);
+  transition: background 420ms var(--lyn-ease);
+}
+
+.lyn-field:hover {
+  background: rgba(11, 10, 8, 0.4);
+}
+
+/* Focus: a light beam sweeps the field's lower edge and a soft warm backdrop
+   rises behind it. Uses focus-within, so it fires for keyboard and pointer
+   alike rather than being a hover-only flourish. */
+.lyn-field::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold-400), transparent);
+  transform: scaleX(0);
+  transition: transform 700ms var(--lyn-ease);
+}
+
+.lyn-field::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(18rem 8rem at 50% 120%, rgba(189, 154, 92, 0.28), transparent 70%);
+  opacity: 0;
+  transition: opacity 700ms var(--lyn-ease);
+}
+
+.lyn-field:focus-within {
+  background: rgba(11, 10, 8, 0.34);
+}
+
+.lyn-field:focus-within::before {
+  transform: scaleX(1);
+}
+
+.lyn-field:focus-within::after {
+  opacity: 1;
+}
+
+.lyn-field > * {
+  position: relative;
+  z-index: 1;
+}
+
+.lyn-field-label {
+  font-size: 0.5625rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-gold-300);
+}
+
+[dir='rtl'] .lyn-field-label {
+  letter-spacing: 0;
+}
+
+.lyn-input {
+  width: 100%;
+  min-height: 1.75rem;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.lyn-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.lyn-select {
+  appearance: none;
+}
+
+.lyn-select option {
+  background: #14120e;
+  color: #f5f0e7;
+}
+
+.lyn-book-action {
+  display: flex;
+  padding: 0.5rem;
+  background: rgba(11, 10, 8, 0.55);
+}
+
+/* ---- Form controls on light surfaces ------------------------------------ */
+
+/* The booking bar's focus treatment, restated for the sand-coloured forms on
+   the contact and reservation pages. Same idea, lower intensity: on a dark
+   glass panel a gold wash reads as light, on paper it would read as a stain.
+   Keyed to `:focus-within` so the keyboard gets exactly what the pointer gets. */
+.lyn-field-lite {
+  position: relative;
+}
+
+.lyn-field-lite::after {
+  content: '';
+  position: absolute;
+  inset: 1.25rem -0.75rem -0.5rem;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 3px;
+  background: radial-gradient(14rem 5rem at 50% 125%, rgba(189, 154, 92, 0.16), transparent 72%);
+  opacity: 0;
+  transition: opacity 620ms var(--lyn-ease);
+}
+
+.lyn-field-lite:focus-within::after {
+  opacity: 1;
+}
+
+.lyn-field-lite > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* The beam itself, sitting on the control's own baseline. It scales from the
+   centre out rather than growing its width, so it stays on the compositor and
+   never nudges the layout below it. */
+.lyn-beam {
+  position: relative;
+  display: block;
+}
+
+.lyn-beam::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold-500), transparent);
+  transform: scaleX(0);
+  transition: transform 700ms var(--lyn-ease);
+}
+
+.lyn-beam:focus-within::after {
+  transform: scaleX(1);
+}
+
+/* ---- Buttons ------------------------------------------------------------ */
+
+/* A light sweep across any button on approach. Deliberately a class rather
+   than a Framer wrapper: <Button> is a server component used on nearly every
+   page, and making it a client component to add a hover flourish would ship a
+   bundle to routes that are otherwise entirely static. */
+.lyn-sheen {
+  position: relative;
+  overflow: hidden;
+}
+
+.lyn-sheen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: translateX(-130%);
+  transition: transform 1100ms var(--lyn-ease);
+}
+
+.lyn-sheen:hover::before,
+.lyn-sheen:focus-visible::before {
+  transform: translateX(130%);
+}
+
+.lyn-sheen > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Inner-page banner -------------------------------------------------- */
+
+.lyn-banner {
+  position: relative;
+  display: flex;
+  height: 60vh;
+  min-height: 24rem;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.lyn-banner-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(11, 10, 8, 0.88), rgba(11, 10, 8, 0.15) 70%), rgba(11, 10, 8, 0.45);
+}
+
+.lyn-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  min-height: 2.75rem;
+  padding: 0.8125rem 1.75rem;
+  border-radius: 2px;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-950);
+  background: var(--color-gold-500);
+  transition:
+    box-shadow 520ms var(--lyn-ease),
+    transform 520ms var(--lyn-ease),
+    background 520ms var(--lyn-ease);
+}
+
+[dir='rtl'] .lyn-cta {
+  letter-spacing: 0;
+}
+
+.lyn-cta > span {
+  position: relative;
+  z-index: 1;
+}
+
+.lyn-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-120%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transition: transform 1100ms var(--lyn-ease);
+}
+
+.lyn-cta:hover,
+.lyn-cta:focus-visible {
+  background: var(--color-gold-400);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 42px -16px rgba(189, 154, 92, 0.85);
+}
+
+.lyn-cta:hover::before,
+.lyn-cta:focus-visible::before {
+  transform: translateX(120%);
+}
+
+.lyn-cta:active {
+  transform: translateY(0);
+}
+
+.lyn-ghost {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  cursor: pointer;
+  padding: 0.8125rem 1.75rem;
+  border-radius: 2px;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-800);
+  border: 1px solid rgba(31, 27, 21, 0.25);
+  transition:
+    color 480ms var(--lyn-ease),
+    border-color 480ms var(--lyn-ease),
+    background 480ms var(--lyn-ease);
+}
+
+[dir='rtl'] .lyn-ghost {
+  letter-spacing: 0;
+}
+
+.lyn-ghost:hover,
+.lyn-ghost:focus-visible {
+  color: var(--color-gold-700);
+  border-color: var(--color-gold-500);
+  background: rgba(189, 154, 92, 0.06);
+}
+
+.lyn-ghost-light {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.lyn-ghost-light:hover,
+.lyn-ghost-light:focus-visible {
+  color: var(--color-gold-300);
+  border-color: var(--color-gold-400);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.lyn-link {
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-gold-700);
+  transition: color 420ms var(--lyn-ease);
+}
+
+[dir='rtl'] .lyn-link {
+  letter-spacing: 0;
+}
+
+.lyn-link:hover {
+  color: var(--color-gold-600);
+}
+
+/* ---- Stats -------------------------------------------------------------- */
+
+.lyn-stat {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-sand-100);
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  transition: background 600ms var(--lyn-ease);
+}
+
+.lyn-stat:hover {
+  background: var(--color-sand-50);
+}
+
+/* A gold wash rising from the base of the cell on approach. */
+.lyn-stat::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 60%;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(189, 154, 92, 0.14), transparent);
+  transform: translateY(100%);
+  transition: transform 700ms var(--lyn-ease);
+}
+
+.lyn-stat:hover::after,
+.lyn-stat:focus-within::after {
+  transform: translateY(0);
+}
+
+.lyn-stat > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Cards: rooms, experiences, amenities, reviews ---------------------- */
+
+.lyn-room,
+.lyn-exp,
+.lyn-amenity,
+.lyn-review {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-sand-50);
+  border: 1px solid rgba(31, 27, 21, 0.09);
+  border-radius: var(--radius-card, 2px);
+  transition:
+    transform 620ms var(--lyn-ease),
+    box-shadow 620ms var(--lyn-ease),
+    border-color 620ms var(--lyn-ease);
+}
+
+.lyn-room:hover,
+.lyn-exp:hover,
+.lyn-amenity:hover,
+.lyn-review:hover,
+.lyn-room:focus-within,
+.lyn-exp:focus-within,
+.lyn-amenity:focus-within,
+.lyn-review:focus-within {
+  transform: translateY(-6px);
+  border-color: rgba(189, 154, 92, 0.45);
+  box-shadow:
+    0 34px 80px -40px rgba(31, 27, 21, 0.55),
+    0 0 0 1px rgba(189, 154, 92, 0.1);
+}
+
+/* Slow zoom + a veil that lifts, so the photo brightens on approach. */
+.lyn-img {
+  transition: transform 1400ms var(--lyn-ease);
+}
+
+.group:hover .lyn-img,
+.group:focus-within .lyn-img {
+  transform: scale(1.07);
+}
+
+.lyn-img-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(11, 10, 8, 0.42), transparent 62%);
+  transition: opacity 800ms var(--lyn-ease);
+}
+
+.group:hover .lyn-img-veil,
+.group:focus-within .lyn-img-veil {
+  opacity: 0.55;
+}
+
+.lyn-room-badge {
+  position: absolute;
+  bottom: 1rem;
+  inset-inline-start: 1rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 2px;
+  font-size: 0.625rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(11, 10, 8, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+[dir='rtl'] .lyn-room-badge {
+  letter-spacing: 0;
+}
+
+.lyn-chip {
+  font-size: 0.6875rem;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  color: var(--color-ink-500);
+  background: var(--color-sand-100);
+  border: 1px solid rgba(31, 27, 21, 0.08);
+  transition:
+    border-color 480ms var(--lyn-ease),
+    color 480ms var(--lyn-ease);
+}
+
+.lyn-room:hover .lyn-chip,
+.lyn-exp:hover .lyn-chip {
+  color: var(--color-ink-800);
+  border-color: rgba(189, 154, 92, 0.35);
+}
+
+/* ---- Tilt, liquid glow and shimmer -------------------------------------- */
+
+.lyn-tilt {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Pointer-tracked warm glow. Painted by <TiltCard> into the background of this
+   layer, so a mousemove costs one paint and no React render. Focus-within gets
+   the same treatment — the effect must never be hover-only. */
+.lyn-tilt-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 620ms var(--lyn-ease);
+}
+
+.lyn-tilt:hover .lyn-tilt-glow,
+.lyn-tilt:focus-within .lyn-tilt-glow {
+  opacity: 1;
+}
+
+/* Liquid glow border: a conic sweep confined to a 1px ring by a mask, so the
+   light appears to travel around the card's edge without a second element and
+   without touching the card's own background. */
+.lyn-glow-edge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--lyn-spin),
+    transparent 0deg,
+    rgba(189, 154, 92, 0.9) 55deg,
+    transparent 130deg,
+    transparent 235deg,
+    rgba(224, 203, 156, 0.7) 300deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 620ms var(--lyn-ease);
+}
+
+.lyn-glow-edge:hover::before,
+.lyn-glow-edge:focus-within::before {
+  opacity: 1;
+  animation: lyn-spin 5s linear infinite;
+}
+
+@keyframes lyn-spin {
+  to {
+    --lyn-spin: 360deg;
+  }
+}
+
+/* A single sheen crossing the glass on approach. */
+.lyn-room::after,
+.lyn-exp::after,
+.lyn-amenity::after,
+.lyn-review::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%);
+  opacity: 0;
+  transition:
+    transform 1500ms var(--lyn-ease),
+    opacity 400ms var(--lyn-ease);
+}
+
+.lyn-room:hover::after,
+.lyn-exp:hover::after,
+.lyn-amenity:hover::after,
+.lyn-review:hover::after,
+.lyn-room:focus-within::after,
+.lyn-exp:focus-within::after,
+.lyn-amenity:focus-within::after,
+.lyn-review:focus-within::after {
+  transform: translateX(130%);
+  opacity: 1;
+}
+
+/* Card content sits above both decorative layers. */
+.lyn-room > *:not(.lyn-tilt-glow),
+.lyn-exp > *:not(.lyn-tilt-glow),
+.lyn-amenity > *:not(.lyn-tilt-glow),
+.lyn-review > *:not(.lyn-tilt-glow) {
+  position: relative;
+  z-index: 3;
+}
+
+/* ---- Amenities ---------------------------------------------------------- */
+
+.lyn-amenity {
+  gap: 1rem;
+  padding: 2.25rem 1.75rem;
+  background: var(--color-sand-50);
+}
+
+.lyn-amenity-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  color: var(--color-gold-700);
+  background: rgba(189, 154, 92, 0.1);
+  transition:
+    background 620ms var(--lyn-ease),
+    color 620ms var(--lyn-ease),
+    transform 620ms var(--lyn-ease);
+}
+
+.lyn-amenity:hover .lyn-amenity-icon,
+.lyn-amenity:focus-within .lyn-amenity-icon {
+  background: rgba(189, 154, 92, 0.2);
+  transform: translateY(-3px) scale(1.06);
+}
+
+/* ---- Reviews ------------------------------------------------------------ */
+
+.lyn-review {
+  gap: 1.25rem;
+  padding: 2.25rem;
+}
+
+.lyn-review-mark {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  line-height: 0.6;
+  color: rgba(189, 154, 92, 0.45);
+}
+
+.lyn-stars {
+  display: inline-flex;
+  gap: 0.25rem;
+  color: var(--color-gold-600);
+}
+
+/* ---- Editorial figures and gallery tiles -------------------------------- */
+
+/* Used for the standalone photographs on the about and services pages, where
+   there is no card around the image to carry the hover state. */
+.lyn-figure {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-card, 2px);
+}
+
+.lyn-figure::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 60%
+  );
+  transform: translateX(-130%);
+  opacity: 0;
+  transition:
+    transform 1500ms var(--lyn-ease),
+    opacity 400ms var(--lyn-ease);
+}
+
+.lyn-figure:hover::after {
+  transform: translateX(130%);
+  opacity: 1;
+}
+
+/* Gallery tiles sit in a masonry column flow, so they cannot be flex or grid
+   children — the stagger is applied to each tile directly rather than through a
+   parent that would break the columns. */
+.lyn-tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  break-inside: avoid;
+  border-radius: var(--radius-card, 2px);
+  cursor: pointer;
+  transition:
+    transform 620ms var(--lyn-ease),
+    box-shadow 620ms var(--lyn-ease);
+}
+
+.lyn-tile:hover,
+.lyn-tile:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: 0 28px 60px -34px rgba(31, 27, 21, 0.6);
+}
+
+.lyn-tile-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(11, 10, 8, 0.45), transparent 60%);
+  opacity: 0;
+  transition: opacity 700ms var(--lyn-ease);
+}
+
+.lyn-tile:hover .lyn-tile-veil,
+.lyn-tile:focus-visible .lyn-tile-veil {
+  opacity: 1;
+}
+
+/* ---- Tabs --------------------------------------------------------------- */
+
+.lyn-tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-bottom: 1px solid rgba(31, 27, 21, 0.1);
+  padding-bottom: 0.75rem;
+}
+
+.lyn-tab {
+  position: relative;
+  cursor: pointer;
+  min-height: 2.75rem;
+  padding: 0.5rem 1.125rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-500);
+  transition:
+    color 480ms var(--lyn-ease),
+    background 480ms var(--lyn-ease);
+}
+
+[dir='rtl'] .lyn-tab {
+  letter-spacing: 0;
+}
+
+.lyn-tab:hover {
+  color: var(--color-ink-900);
+  background: rgba(31, 27, 21, 0.04);
+}
+
+.lyn-tab[data-selected] {
+  color: var(--color-gold-700);
+  background: rgba(189, 154, 92, 0.1);
+}
+
+.lyn-tab:focus-visible {
+  outline: 2px solid var(--color-gold-500);
+  outline-offset: 3px;
+}
+
+/* The panel itself crossfades in CSS. The cards inside are staggered by
+   Framer (<Stagger> keyed on the active tab) — deliberately NOT also animated
+   here, because a CSS animation outranks inline styles and would wrestle
+   Framer for control of opacity. */
+.lyn-panel {
+  animation: lyn-panel-in 760ms var(--lyn-ease) both;
+}
+
+@keyframes lyn-panel-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---- Finale ------------------------------------------------------------- */
+
+.lyn-finale {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-card, 2px);
+}
+
+.lyn-finale-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(11, 10, 8, 0.9), rgba(11, 10, 8, 0.55));
+}
+
+.lyn-focus:focus-visible {
+  outline: 2px solid var(--color-gold-500);
+  outline-offset: 3px;
+}
+
+/* ---- Reduced motion ----------------------------------------------------- */
+
+/* The global block in globals.css already collapses durations. This switches
+   off the looping decoration outright, so nothing is left drifting, breathing
+   or shimmering for a visitor who asked for stillness. */
+@media (prefers-reduced-motion: reduce) {
+  .lyn-ambient-a,
+  .lyn-ambient-b,
+  .lyn-float,
+  .lyn-float-slow,
+  .lyn-scroll-bead,
+  .lyn-book::before,
+  .lyn-glow-edge:hover::before,
+  .lyn-glow-edge:focus-within::before {
+    animation: none;
+  }
+
+  .lyn-room:hover,
+  .lyn-exp:hover,
+  .lyn-amenity:hover,
+  .lyn-review:hover,
+  .lyn-room:focus-within,
+  .lyn-exp:focus-within,
+  .lyn-amenity:focus-within,
+  .lyn-review:focus-within {
+    transform: none;
+  }
+
+  .lyn-room::after,
+  .lyn-exp::after,
+  .lyn-amenity::after,
+  .lyn-review::after,
+  .lyn-figure::after,
+  .lyn-sheen::before {
+    display: none;
+  }
+
+  .lyn-tile:hover,
+  .lyn-tile:focus-visible {
+    transform: none;
+  }
+
+  .lyn-tilt-glow {
+    transition: none;
+  }
+
+  /* Framer snaps transforms to their target rather than animating them under
+     reduced motion, so the curtain should already be open and the word masks
+     already emptied. These pin that outcome even if the primitive never gets
+     its in-view callback — an uncovered photograph is the only acceptable
+     resting state for a decorative wipe. */
+  .lyn-curtain-veil {
+    transform: scaleY(0);
+  }
+
+  .lyn-curtain-media,
+  .lyn-word-in {
+    transform: none;
+  }
+
+  /* Belt and braces, and now unscoped: the motion primitives already collapse
+     under reduced motion, so nothing should still be sitting at opacity 0 —
+     but if anything ever is, on any page, it resolves here rather than leaving
+     content invisible to the visitor least able to wait it out. */
+  [data-motion] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

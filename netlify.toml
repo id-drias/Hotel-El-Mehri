@@ -1,0 +1,18 @@
+# Netlify hosts the Next.js frontend only. The Django API in backend/ needs a
+# Python host (Render, Railway, Fly) — point NEXT_PUBLIC_API_BASE_URL at it
+# once it is live, otherwise the reservation/contact forms and the /admin
+# console have nothing to talk to.
+
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# App Router SSR, next-intl middleware, ISR and next/image all run through the
+# Next.js runtime. Without it the deploy is a static shell that 404s on
+# /fr, /ar and every dynamic route.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

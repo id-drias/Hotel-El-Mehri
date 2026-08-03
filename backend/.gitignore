@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+db.sqlite3
+staticfiles/
+# Uploaded media: keep the directory skeleton, ignore the contents.
+# `!media/*/` un-ignores the subdirectories so their .gitkeep survives, which
+# also un-ignored everything inside them — a test run that uploaded an image
+# left 61 stray files staged for commit. `media/*/*` closes that.
+media/*
+!media/.gitkeep
+!media/*/
+media/*/*
+!media/*/.gitkeep
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

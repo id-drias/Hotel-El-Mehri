@@ -1,0 +1,128 @@
+@import 'tailwindcss';
+@import './tokens.css';
+@import './motion.css';
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--color-sand-50);
+    color: var(--color-ink-800);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background-color: var(--color-gold-400);
+    color: var(--color-ink-950);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold-500);
+    outline-offset: 3px;
+  }
+
+  /* Arabic reads better a touch larger and with more line height. */
+  [lang='ar'] body,
+  [dir='rtl'] body {
+    font-size: 1.05rem;
+    line-height: 1.9;
+  }
+
+  /* Repoint the two family variables for Arabic. Every `font-display` and
+     `font-sans` utility reads these, so the whole site switches with no
+     component changes. Wins over @theme's :root because base sorts after. */
+  [lang='ar'] {
+    --font-display: var(--font-amiri), 'Amiri', Georgia, serif;
+    --font-sans: var(--font-plex-arabic), 'IBM Plex Sans Arabic', system-ui, sans-serif;
+  }
+
+  /* Arabic is a joined cursive script: letter-spacing prises the glyphs of a
+     word apart and reads as broken. Neutralise every `tracking-*` utility
+     under RTL. Two class selectors outrank the single-class utility, so no
+     !important is needed. Latin wordmarks opt back in via `.keep-tracking`
+     (deliberately not named `tracking-*`, so a tailwind-merge `cn()` could
+     never treat it as a conflicting utility and drop it). */
+  [dir='rtl'] [class*='tracking-']:not(.keep-tracking) {
+    letter-spacing: 0;
+  }
+}
+
+@layer components {
+  /* The thin gold rule that sits under section eyebrows. */
+  .rule-gold::after {
+    content: '';
+    display: block;
+    width: 3rem;
+    height: 1px;
+    margin-top: 1rem;
+    background-color: var(--color-gold-500);
+  }
+
+  .rule-gold-center::after {
+    margin-inline: auto;
+  }
+
+  /* Letter-spaced uppercase label used above every section title. */
+  .eyebrow {
+    font-size: 0.6875rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-gold-700);
+  }
+
+  /* Not a `tracking-*` utility, so the RTL reset above doesn't reach it. */
+  [dir='rtl'] .eyebrow {
+    letter-spacing: 0;
+  }
+
+  /* Slow zoom on hover, for image cards. */
+  .img-zoom {
+    transition: transform 1.2s var(--ease-luxe);
+  }
+
+  .group:hover .img-zoom {
+    transform: scale(1.06);
+  }
+}
+
+@layer utilities {
+  .animate-fade-up {
+    animation: fade-up 0.9s var(--ease-luxe) both;
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(1.25rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

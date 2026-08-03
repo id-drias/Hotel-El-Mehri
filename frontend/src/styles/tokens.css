@@ -1,0 +1,47 @@
+/**
+ * Design tokens — a warm, desert-luxe palette drawn from the palm grove and
+ * the Saharan light of Ouargla: deep ink, sand, and a restrained gold accent.
+ */
+
+@theme {
+  /* Ink — dark surfaces and body copy */
+  --color-ink-950: #0b0a08;
+  --color-ink-900: #14120e;
+  --color-ink-800: #1f1b15;
+  --color-ink-700: #2e2820;
+  --color-ink-500: #5a5145;
+  /* Lightest ink that still clears 4.5:1 on sand-50 (4.79:1) — for placeholders
+     and hints, which need contrast even though they read as secondary. */
+  --color-ink-450: #776d60;
+  --color-ink-400: #8a8073;
+
+  /* Sand — light surfaces */
+  --color-sand-50: #fbf8f3;
+  --color-sand-100: #f5f0e7;
+  --color-sand-200: #ebe2d3;
+  --color-sand-300: #dccfb8;
+
+  /* Gold — the single accent, used sparingly */
+  --color-gold-300: #e2cb9c;
+  --color-gold-400: #d0b27c;
+  --color-gold-500: #bd9a5c;
+  --color-gold-600: #9d7f44;
+  /* gold-600 is only 3.57:1 on sand — fine for rules and large type, short of
+     AA for the small uppercase labels. gold-700 carries those at 5.07:1. */
+  --color-gold-700: #806736;
+
+  /* Typography */
+  --font-display: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+  --font-sans: var(--font-jost), 'Jost', system-ui, -apple-system, sans-serif;
+
+  /* Rhythm */
+  --spacing-section: 7rem;
+  --radius-card: 2px;
+
+  /* Elevation — soft and warm, never grey */
+  --shadow-soft: 0 18px 50px -24px rgb(31 27 21 / 0.35);
+  --shadow-lift: 0 30px 70px -30px rgb(31 27 21 / 0.5);
+
+  /* Motion */
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+}
